@@ -1,0 +1,96 @@
+﻿@model UserPortalWebService.Models.User
+@{
+    ViewBag.Title = "UserProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<link rel="stylesheet" href="~/Content/Style.css" type="text/css" />
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.css" rel="stylesheet" />
+
+<ul class="nav navbar-nav navbar-right">
+
+
+    <li>@Html.ActionLink("Cahnge Password", "ChangePassword", "Users")</li>
+
+    <li>@Html.ActionLink("Log out", "Logout", "Users", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+</ul>
+<div class="container">
+    <h2>User Profile</h2>
+    <table class="table table-borderless">
+
+        @if (Session["Email"] != null)
+        {
+
+            <tbody>
+
+                <tr>
+                    <td>
+                        FirstName : @Session["FirstName"].ToString()
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        LastName: @Session["LastName"].ToString()
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        Address: @Session["Address"].ToString()
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        Phone:  @Session["Phone"].ToString()
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        Email:   @Session["Email"].ToString()
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        Password:   @Session["Password"].ToString()
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <td>
+                        BirthDate:  @Session["BirthDate"].ToString()
+                    </td>
+                </tr>
+
+            </tbody>
+
+        }
+
+
+    </table>
+
+
+
+
+</div>
+
+
+
+@section scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.js"></script>
+}
