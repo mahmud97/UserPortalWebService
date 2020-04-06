@@ -55,14 +55,7 @@ namespace UserPortalWebService.Controllers
             return View(user);
         }
 
-        //[HttpPost]
-        //public JsonResult CheckEmail(string email)
-        //{
 
-        //    bool isValid = !db.Users.ToList().Exists(u => u.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase));
-        //    return Json(isValid);
-
-        //}
 
         public ActionResult Login()
         {
@@ -70,26 +63,45 @@ namespace UserPortalWebService.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Login(User user, string button)
+
+        public ActionResult LoginNext(User user, string button)
         {
-           
+
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
             if (button == "Clear")
             {
 
                 ModelState.Clear();
-                return View();
+                return View("Login");
 
             }
+
+
 
 
             using (MainDataContext db = new MainDataContext())
             {
 
-                var userExist = db.Users.Where(u => u.Email.Equals(user.Email) && u.Password.Equals(user.Password)).FirstOrDefault();
+                var userExist = db.Users.Where(u => u.Email.Equals(user.Email) ).FirstOrDefault();
 
-                if (userExist != null)
+                if (userExist == null)
+                    return HttpNotFound("Email does not found in the database");
+
+
+                var check = userExist.Email.Equals(user.Email) && userExist.Password.Equals(user.Password);
+
+                if (!check)
+                {
+                    ModelState.AddModelError("error", "email and password do not match");
+                    return View("Login");
+                }
+
+                if (userExist != null && check)
                 {
 
                     Session["FirstName"] = userExist.FirstName.ToString();
@@ -112,8 +124,8 @@ namespace UserPortalWebService.Controllers
 
 
 
-            
-            return View(user);
+
+            return View("Login", user);
         }
 
         public ActionResult UserProfile()
@@ -130,17 +142,18 @@ namespace UserPortalWebService.Controllers
         }
 
 
-        
 
 
-        public ActionResult ChangePassword(int? id)
+
+        public ActionResult ChangePassword(string email)
         {
-            var user = db.Users.SingleOrDefault(u => u.Id == id);
+            
+            var user = db.Users.Where(u => u.Email == email).SingleOrDefault();
             if (user == null)
             {
-
-                return HttpNotFound();
+                return HttpNotFound("email was not found");
             }
+
             var viewModel = new UserViewModel
             {
                 User = user
@@ -148,8 +161,6 @@ namespace UserPortalWebService.Controllers
             };
 
             return View("ChangePassword", viewModel);
-
-
         }
 
 
@@ -158,36 +169,46 @@ namespace UserPortalWebService.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Save(User user, UserViewModel uvm)
         {
-            if (!ModelState.IsValid)
+            //if (!ModelState.IsValid)
+            //{
+
+            //    var viewModel = new UserViewModel
+            //    {
+            //        User = user
+
+            //    };
+
+            //    return View("ChangePassword", viewModel);
+
+            //}
+
+            if (uvm.NewPassword == null)
+                return HttpNotFound("New password entered null");
+
+            var isPassenteredSame = db.Users.Where(p => p.Password == uvm.NewPassword).FirstOrDefault();
+
+            
+            if (isPassenteredSame!=null)
             {
-
-                var viewModel = new UserViewModel
-                {
-                    User = user
-
-                };
-
-                return View("ChangePassword", viewModel);
-
+                ModelState.AddModelError("Error", "Please Enter a new password you entered the previous password");
+                return View("ChangePassword");
             }
 
 
-           
-            else
-            {
-                var updatePassword = db.Users.Single(c => c.Id == user.Id);
-
-                updatePassword.Password = uvm.NewPassword;
-
-
-            }
+            var updatePassword = db.Users.Single(c => c.Id == uvm.User.Id);
+            updatePassword.Password = uvm.NewPassword;
             db.SaveChanges();
-            return RedirectToAction("Login", "Users");
+            return RedirectToAction("Successful", updatePassword);
 
 
         }
 
-        
+        public ActionResult Successful(User user)
+        {
+            return View(user);
+        }
+
+
         public ActionResult Logout()
         {
             Session.Clear();

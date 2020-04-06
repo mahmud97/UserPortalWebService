@@ -11,83 +11,105 @@
 <link href="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.css" rel="stylesheet" />
 
 <ul class="nav navbar-nav navbar-right">
+    @{ 
+        var Email = Session["Email"];
+    }
 
+    <li>@Html.ActionLink("Cahnge Password", "ChangePassword", "Users", new { email = Email }, null)</li>
+   
+    @*<li>@Html.ActionLink("Log out", "Logout", "Users", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>*@
+    <li>@Html.ActionLink("Log out", "Logout", "Users")
 
-    <li>@Html.ActionLink("Cahnge Password", "ChangePassword", "Users")</li>
-
-    <li>@Html.ActionLink("Log out", "Logout", "Users", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
 </ul>
-<div class="container">
-    <h2>User Profile</h2>
-    <table class="table table-borderless">
 
-        @if (Session["Email"] != null)
-        {
+<style>
+    .paddingleft {
+        padding-left: 380px;
+    }
 
-            <tbody>
+    .fontStyle{
+        font-weight:bold;
+    }
 
-                <tr>
-                    <td>
-                        FirstName : @Session["FirstName"].ToString()
-                    </td>
-                </tr>
+    .margintop{
+        margin-top:90px;
+    }
 
+</style>
 
-                <tr>
-                    <td>
-                        LastName: @Session["LastName"].ToString()
-                    </td>
-                </tr>
+<div class="margintop">
+    <h2 style="text-align:center; margin-right:200px;">User Profile</h2>
+    <div class="paddingleft">
 
+        <table class="table table-borderless fontStyle">
 
-                <tr>
-                    <td>
-                        Address: @Session["Address"].ToString()
-                    </td>
-                </tr>
+            @if (Session["Email"] != null)
+            {
 
+                <tbody>
 
-                <tr>
-                    <td>
-                        Phone:  @Session["Phone"].ToString()
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            FirstName : @Session["FirstName"].ToString()
+                        </td>
+                    </tr>
 
 
-                <tr>
-                    <td>
-                        Email:   @Session["Email"].ToString()
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            LastName: @Session["LastName"].ToString()
+                        </td>
+                    </tr>
 
 
-                <tr>
-                    <td>
-                        Password:   @Session["Password"].ToString()
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            Address: @Session["Address"].ToString()
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            Phone:  @Session["Phone"].ToString()
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            Email:   @Session["Email"].ToString()
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            Password:   @Session["Password"].ToString()
+                        </td>
+                    </tr>
 
 
 
-                <tr>
-                    <td>
-                        BirthDate:  @Session["BirthDate"].ToString()
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            BirthDate:  @Session["BirthDate"].ToString()
+                        </td>
+                    </tr>
 
-            </tbody>
+                </tbody>
 
-        }
-
-
-    </table>
+            }
 
 
+        </table>
 
+
+
+
+    </div>
 
 </div>
-
-
 
 @section scripts{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
